@@ -5,9 +5,96 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F7FAFC;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* React Flow custom styles */
+.react-flow__node {
+  font-size: 12px;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #4299E1;
+  border: 2px solid #fff;
+}
+
+.react-flow__handle-left {
+  left: -5px;
+}
+
+.react-flow__handle-right {
+  right: -5px;
+}
+
+.react-flow__edge-path {
+  stroke: #4299E1;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #2B6CB0;
+}
+
+.react-flow__controls {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.react-flow__controls-button {
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.react-flow__minimap {
+  background-color: #EDF2F7;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom node type specific colors */
+.customInput {
+  background-color: #48BB78 !important;
+}
+
+.llm {
+  background-color: #9F7AEA !important;
+}
+
+.customOutput {
+  background-color: #F56565 !important;
+}
+
+.text {
+  background-color: #4299E1 !important;
+}
+
+.transform {
+  background-color: #ED8936 !important;
+}
+
+.filter {
+  background-color: #38B2AC !important;
+}
+
+.combine {
+  background-color: #D69E2E !important;
+}
+
+.api {
+  background-color: #805AD5 !important;
+}
+
+.conditional {
+  background-color: #E53E3E !important;
 }

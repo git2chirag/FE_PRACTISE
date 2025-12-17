@@ -10,6 +10,11 @@ import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
+import { TransformNode } from './nodes/transformNode';
+import { FilterNode } from './nodes/filterNode';
+import { CombineNode } from './nodes/combineNode';
+import { APINode } from './nodes/apiNode';
+import { ConditionalNode } from './nodes/conditionalNode';
 
 import 'reactflow/dist/style.css';
 
@@ -20,6 +25,11 @@ const nodeTypes = {
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  transform: TransformNode,
+  filter: FilterNode,
+  combine: CombineNode,
+  api: APINode,
+  conditional: ConditionalNode,
 };
 
 export const PipelineUI: React.FC = () => {
@@ -85,7 +95,7 @@ export const PipelineUI: React.FC = () => {
     }, [reactFlowInstance]);
 
     return (
-      <div ref={reactFlowWrapper} style={{ width: '100vw', height: '80vh' }}>
+        <div ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -101,8 +111,23 @@ export const PipelineUI: React.FC = () => {
                 connectionLineType={"smoothstep" as ConnectionLineType}
             >
                 <Controls />
-                <Background gap={gridSize} />
-                <MiniMap />
+                <Background gap={gridSize} color="#CBD5E0" />
+                <MiniMap 
+                    nodeColor={(node) => {
+                        switch (node.type) {
+                            case 'customInput': return '#48BB78';
+                            case 'llm': return '#9F7AEA';
+                            case 'customOutput': return '#F56565';
+                            case 'text': return '#4299E1';
+                            case 'transform': return '#ED8936';
+                            case 'filter': return '#38B2AC';
+                            case 'combine': return '#D69E2E';
+                            case 'api': return '#805AD5';
+                            case 'conditional': return '#E53E3E';
+                            default: return '#A0AEC0';
+                        }
+                    }}
+                />
             </ReactFlow>
         </div>
     );

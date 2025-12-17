@@ -1,8 +1,9 @@
 // outputNode.tsx
 
 import { useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { Position } from 'reactflow';
 import React from 'react';
+import { BaseNode, HandleConfig } from './BaseNode';
 
 export const OutputNode = ({ id, data }: any) => {
   const [currName, setCurrName] = useState<string>(data?.outputName || id.replace('customOutput-', 'output_'));
@@ -16,33 +17,48 @@ export const OutputNode = ({ id, data }: any) => {
     setOutputType(e.target.value);
   };
 
+  const handles: HandleConfig[] = [
+    {
+      type: 'target',
+      position: Position.Left,
+      id: `${id}-value`
+    }
+  ];
+
   return (
-    <div style={{width: 200, height: 80, border: '1px solid black'}}>
-      <Handle
-        type="target"
-        position={Position.Left}
-        id={`${id}-value`}
-      />
-      <div>
-        <span>Output</span>
-      </div>
-      <div>
-        <label>
-          Name:
+    <BaseNode id={id} data={data} title="Output" handles={handles}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', fontSize: '12px' }}>
+          <span style={{ marginBottom: '4px', fontWeight: 500 }}>Name:</span>
           <input 
             type="text" 
             value={currName} 
-            onChange={handleNameChange} 
+            onChange={handleNameChange}
+            style={{
+              padding: '4px 8px',
+              border: '1px solid #CBD5E0',
+              borderRadius: '4px',
+              fontSize: '12px'
+            }}
           />
         </label>
-        <label>
-          Type:
-          <select value={outputType} onChange={handleTypeChange}>
+        <label style={{ display: 'flex', flexDirection: 'column', fontSize: '12px' }}>
+          <span style={{ marginBottom: '4px', fontWeight: 500 }}>Type:</span>
+          <select 
+            value={outputType} 
+            onChange={handleTypeChange}
+            style={{
+              padding: '4px 8px',
+              border: '1px solid #CBD5E0',
+              borderRadius: '4px',
+              fontSize: '12px'
+            }}
+          >
             <option value="Text">Text</option>
             <option value="File">Image</option>
           </select>
         </label>
       </div>
-    </div>
+    </BaseNode>
   );
 }
