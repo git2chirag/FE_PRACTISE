@@ -22,28 +22,16 @@ const nodeTypes = {
   text: TextNode,
 };
 
-const selector = (state: StoreState) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  getNodeID: state.getNodeID,
-  addNode: state.addNode,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-});
-
 export const PipelineUI: React.FC = () => {
     const reactFlowWrapper = useRef<HTMLDivElement>(null);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-    const {
-      nodes,
-      edges,
-      getNodeID,
-      addNode,
-      onNodesChange,
-      onEdgesChange,
-      onConnect,
-    } = useStore(selector); // removed shallow
+    const nodes = useStore((state) => state.nodes);
+    const edges = useStore((state) => state.edges);
+    const getNodeID = useStore((state) => state.getNodeID);
+    const addNode = useStore((state) => state.addNode);
+    const onNodesChange = useStore((state) => state.onNodesChange);
+    const onEdgesChange = useStore((state) => state.onEdgesChange);
+    const onConnect = useStore((state) => state.onConnect);
 
     const getInitNodeData = (nodeID: string, type: string) => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
@@ -97,7 +85,7 @@ export const PipelineUI: React.FC = () => {
     }, [reactFlowInstance]);
 
     return (
-        <div ref={reactFlowWrapper}>
+      <div ref={reactFlowWrapper} style={{ width: '100vw', height: '80vh' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -119,6 +107,3 @@ export const PipelineUI: React.FC = () => {
         </div>
     );
 };
-
-// Converted to TypeScript
-export {};

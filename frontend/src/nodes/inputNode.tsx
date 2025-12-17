@@ -54,5 +54,3 @@ export const InputNode: React.FC<InputNodeProps> = ({ id, data }) => {
     </div>
   );
 }
-
-export {};

@@ -35,6 +35,3 @@ export const TextNode = ({ id, data }: any) => {
     </div>
   );
 }
-
-// Converted to TypeScript
-export {};

@@ -46,6 +46,3 @@ export const OutputNode = ({ id, data }: any) => {
     </div>
   );
 }
-
-// Converted to TypeScript
-export {};

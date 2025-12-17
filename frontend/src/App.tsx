@@ -14,6 +14,3 @@ function App() {
 }
 
 export default App;
-
-// Converted to TypeScript
-export {};

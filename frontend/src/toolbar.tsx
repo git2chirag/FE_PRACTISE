@@ -16,6 +16,3 @@ export const PipelineToolbar = () => {
         </div>
     );
 };
-
-// Converted to TypeScript
-export {};
