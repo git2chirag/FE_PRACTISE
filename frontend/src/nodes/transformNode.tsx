@@ -1,48 +1,74 @@
 // transformNode.tsx
 // A node for transforming data
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Position } from 'reactflow';
 import React from 'react';
 import { BaseNode, HandleConfig } from './BaseNode';
+import { useStore } from '../store';
 
 export const TransformNode = ({ id, data }: any) => {
   const [operation, setOperation] = useState<string>(data?.operation || 'uppercase');
+  const updateNodeData = useStore((state) => state.updateNodeData);
+
+  useEffect(() => {
+    updateNodeData(id, { 
+      operation,
+      outputs: ['result', 'original', 'metadata']
+    });
+  }, [operation, id, updateNodeData]);
 
   const handles: HandleConfig[] = [
     {
       type: 'target',
       position: Position.Left,
-      id: `${id}-input`
+      id: `${id}-in`
     },
     {
       type: 'source',
       position: Position.Right,
-      id: `${id}-output`
+      id: `${id}-out`
     }
   ];
 
   return (
-    <BaseNode id={id} data={data} title="Transform" handles={handles}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{ display: 'flex', flexDirection: 'column', fontSize: '12px' }}>
-          <span style={{ marginBottom: '4px', fontWeight: 500 }}>Operation:</span>
+    <BaseNode id={id} data={data} title="⚙️ Transform" handles={handles}>
+      <div className="flex flex-col gap-3">
+        <label className="flex flex-col text-xs">
+          <span className="mb-1.5 font-semibold text-gray-700">Operation:</span>
           <select 
             value={operation} 
             onChange={(e) => setOperation(e.target.value)}
-            style={{
-              padding: '4px 8px',
-              border: '1px solid #CBD5E0',
-              borderRadius: '4px',
-              fontSize: '12px'
-            }}
+            className="px-3 py-2 border-2 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all bg-white hover:border-gray-400"
           >
-            <option value="uppercase">Uppercase</option>
-            <option value="lowercase">Lowercase</option>
-            <option value="reverse">Reverse</option>
-            <option value="trim">Trim</option>
+            <option value="uppercase">🔠 Uppercase</option>
+            <option value="lowercase">🔡 Lowercase</option>
+            <option value="reverse">🔄 Reverse</option>
+            <option value="trim">✂️ Trim</option>
+            <option value="split">✂️ Split</option>
+            <option value="replace">🔁 Replace</option>
           </select>
         </label>
+        <div className="text-xs mt-1 p-3 bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-md">
+          <div className="font-bold text-orange-800 mb-2">Outputs:</div>
+          <div className="text-orange-700 space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+              <span className="font-medium">result</span>
+              <span className="text-orange-600">(any)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+              <span className="font-medium">original</span>
+              <span className="text-orange-600">(any)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+              <span className="font-medium">metadata</span>
+              <span className="text-orange-600">(object)</span>
+            </div>
+          </div>
+        </div>
       </div>
     </BaseNode>
   );
