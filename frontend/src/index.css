@@ -100,3 +100,22 @@ code {
 .conditional {
   background-color: #E53E3E !important;
 }
+
+/* Draft.js Editor Styles */
+.rich-text-editor .DraftEditor-root {
+  min-height: 80px;
+}
+
+.rich-text-editor .public-DraftEditorPlaceholder-root {
+  color: #9CA3AF;
+  position: absolute;
+  pointer-events: none;
+}
+
+.rich-text-editor .public-DraftEditor-content {
+  min-height: inherit;
+}
+
+.rich-text-editor .DraftEditor-editorContainer {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}

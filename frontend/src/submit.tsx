@@ -1,6 +1,83 @@
 // submit.tsx
 import React from 'react';
 import { useStore } from './store';
+import type { Node, Edge } from 'reactflow';
+
+// Function to resolve variable references to actual values
+const resolveVariables = (nodes: Node[], edges: Edge[]): Node[] => {
+    // Create a map of node outputs
+    const nodeOutputs: Record<string, any> = {};
+    
+    // First pass: collect all node outputs
+    nodes.forEach(node => {
+        const nodeData = node.data;
+        
+        // For input nodes, use the inputName as the output value
+        if (node.type === 'customInput') {
+            const outputName = nodeData.inputName || nodeData.outputs?.[0] || 'value';
+            nodeOutputs[`${node.id}.${outputName}`] = nodeData.inputName || 'input_value';
+        }
+        // For LLM nodes, outputs are response, usage, model_name
+        else if (node.type === 'llm') {
+            nodeOutputs[`${node.id}.response`] = `[LLM Response from ${nodeData.model || 'GPT-4'}]`;
+            nodeOutputs[`${node.id}.usage`] = '[Token Usage]';
+            nodeOutputs[`${node.id}.model_name`] = nodeData.model || 'gpt-4';
+        }
+        // For other nodes with outputs
+        else if (nodeData.outputs) {
+            nodeData.outputs.forEach((output: string) => {
+                nodeOutputs[`${node.id}.${output}`] = `[${output} from ${node.id}]`;
+            });
+        }
+    });
+    
+    console.log('[Submit] Node outputs map:', nodeOutputs);
+    
+    // Second pass: resolve variables in text fields
+    return nodes.map(node => {
+        const nodeData = { ...node.data };
+        
+        // Resolve variables in text nodes
+        if (node.type === 'text' && nodeData.text && nodeData.variables) {
+            let resolvedText = nodeData.text;
+            
+            // Replace each variable with its actual value
+            nodeData.variables.forEach((variable: string) => {
+                const value = nodeOutputs[variable] || `{{${variable}}}`;
+                // Replace the variable name with its value
+                resolvedText = resolvedText.replace(variable, value);
+            });
+            
+            console.log('[Submit] Resolved text node:', { 
+                original: nodeData.text, 
+                resolved: resolvedText,
+                variables: nodeData.variables 
+            });
+            
+            nodeData.resolvedText = resolvedText;
+        }
+        
+        // Resolve variables in LLM system prompts
+        if (node.type === 'llm' && nodeData.systemPrompt && nodeData.variables) {
+            let resolvedPrompt = nodeData.systemPrompt;
+            
+            nodeData.variables.forEach((variable: string) => {
+                const value = nodeOutputs[variable] || `{{${variable}}}`;
+                resolvedPrompt = resolvedPrompt.replace(variable, value);
+            });
+            
+            console.log('[Submit] Resolved LLM prompt:', { 
+                original: nodeData.systemPrompt, 
+                resolved: resolvedPrompt,
+                variables: nodeData.variables 
+            });
+            
+            nodeData.resolvedSystemPrompt = resolvedPrompt;
+        }
+        
+        return { ...node, data: nodeData };
+    });
+};
 
 export const SubmitButton = () => {
     const nodes = useStore((state) => state.nodes);
@@ -8,12 +85,18 @@ export const SubmitButton = () => {
 
     const handleSubmit = async () => {
         try {
+            // Resolve variables before submitting
+            const resolvedNodes = resolveVariables(nodes, edges);
+            
+            console.log('[Submit] Original nodes:', nodes);
+            console.log('[Submit] Resolved nodes:', resolvedNodes);
+            
             const response = await fetch('http://127.0.0.1:8000/pipelines/parse', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ nodes, edges }),
+                body: JSON.stringify({ nodes: resolvedNodes, edges }),
             });
 
             if (!response.ok) {

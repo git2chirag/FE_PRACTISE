@@ -33,15 +33,15 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
   const setHighlightedNode = useStore((state: any) => state.setHighlightedNode);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Filter out text nodes and show all other nodes with outputs
+  // Get all upstream nodes for the current no
+  // Filter to show only upstream nodes (nodes that come before this one)
   const outputOptions: OutputOption[] = [];
   nodes.forEach((node: any) => {
-    // Skip text nodes - they consume variables, don't provide them
-    // skip self nodes
+    // Skip self node
     if (node.id === selfNodeId) {
       return;
     }
-        
+     
     const outputs = node.data?.outputs || [];
     if (outputs.length > 0) {
       outputs.forEach((output: string) => {
@@ -65,11 +65,12 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
     }
   });
 
-  useEffect(() => {
-    if (isOpen && dropdownRef.current) {
-      dropdownRef.current.focus();
-    }
-  }, [isOpen]);
+  // Don't auto-focus dropdown to keep editor focus
+  // useEffect(() => {
+  //   if (isOpen && dropdownRef.current) {
+  //     dropdownRef.current.focus();
+  //   }
+  // }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -78,14 +79,20 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
           setSelectedIndex(prev => Math.min(prev + 1, outputOptions.length - 1));
           break;
         case 'ArrowUp':
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
           setSelectedIndex(prev => Math.max(prev - 1, 0));
           break;
         case 'Enter':
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
           if (outputOptions[selectedIndex]) {
             const option = outputOptions[selectedIndex];
             onSelect(`${option.nodeName}.${option.outputName}`, option.nodeId);
@@ -93,13 +100,15 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
           break;
         case 'Escape':
           e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
           onClose();
           break;
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [isOpen, selectedIndex, outputOptions, onSelect, onClose]);
 
   // Update highlighting when selection changes
@@ -144,14 +153,19 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
       {/* Backdrop */}
       <div 
         className="absolute inset-0 z-[999]"
-        onClick={onClose}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
+        }}
       />
       {/* Selector */}
       <div
         ref={dropdownRef}
         className="fixed bg-white border-2 border-blue-400 rounded-xl shadow-2xl z-[1000] min-w-[320px] max-w-[400px] max-h-[450px] overflow-hidden"
         style={{
-          left: `0`,
+          left: '0',
+          top: `100%`,
         }}
         tabIndex={-1}
       >
@@ -170,7 +184,12 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
                     ? 'bg-blue-100 border-l-4 border-l-blue-500' 
                     : 'hover:bg-gray-50 border-l-4 border-l-transparent'
                 }`}
-                onClick={() => onSelect(`${option.nodeName}.${option.outputName}`, option.nodeId)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('[VariableSelector] Option selected:', { option, nodeId: option.nodeId });
+                  onSelect(`${option.nodeName}.${option.outputName}`, option.nodeId);
+                }}
                 onMouseEnter={() => setSelectedIndex(index)}
               >
                 <div className="flex items-start justify-between gap-2">

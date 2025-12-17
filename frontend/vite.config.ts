@@ -11,5 +11,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true
+  },
+  define: {
+    global: 'window', // This aliases 'global' to 'window' for browser builds
   }
 });
