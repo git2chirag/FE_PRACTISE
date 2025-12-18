@@ -14,11 +14,13 @@ export interface StoreState {
     edges: Edge[];
     nodeIDs: Record<string, number>;
     highlightedNodeId: string | null;
+    showOutputs: boolean;
     getNodeID: (type: string) => string;
     addNode: (node: Node) => void;
     updateNodeData: (nodeId: string, data: any) => void;
     deleteNode: (nodeId: string) => void;
     setHighlightedNode: (nodeId: string | null) => void;
+    toggleOutputs: () => void;
     createVariableConnection: (sourceNodeId: string, targetNodeId: string, variableName: string) => void;
     removeVariableConnection: (targetNodeId: string, variableName: string) => void;
     onNodesChange: (changes: NodeChange[]) => void;
@@ -34,6 +36,7 @@ export const useStore = create<StoreState>((set, get) => ({
     edges: [],
     nodeIDs: {},
     highlightedNodeId: null,
+    showOutputs: true,
     getNodeID: (type: string) => {
         const newIDs = { ...get().nodeIDs };
         if (newIDs[type] === undefined) {
@@ -72,6 +75,9 @@ export const useStore = create<StoreState>((set, get) => ({
     },
     setHighlightedNode: (nodeId: string | null) => {
         set({ highlightedNodeId: nodeId });
+    },
+    toggleOutputs: () => {
+        set({ showOutputs: !get().showOutputs });
     },
     createVariableConnection: (sourceNodeId: string, targetNodeId: string, variableName: string) => {
         console.log('[Store] createVariableConnection called:', { sourceNodeId, targetNodeId, variableName });

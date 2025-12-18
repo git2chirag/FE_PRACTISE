@@ -21,6 +21,8 @@ export interface BaseNodeProps {
   children?: ReactNode;
   style?: React.CSSProperties;
   className?: string;
+  outputs?: Record<string, any>;
+  outputLabels?: Record<string, string>;
 }
 
 export const BaseNode: React.FC<BaseNodeProps> = ({
@@ -30,12 +32,15 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
   handles = [],
   children,
   style = {},
-  className = ''
+  className = '',
+  outputs = {},
+  outputLabels = {}
 }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const deleteNode = useStore((state) => state.deleteNode);
   const updateNodeData = useStore((state) => state.updateNodeData);
   const highlightedNodeId = useStore((state) => state.highlightedNodeId);
+  const showOutputs = useStore((state) => state.showOutputs);
 
   const handleDelete = () => {
     if (confirmDelete) {
@@ -133,6 +138,32 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
       
       {/* Content */}
       <div>{children}</div>
+      
+      {/* Outputs */}
+      {showOutputs && Object.keys(outputs).length > 0 && (
+        <div className="text-xs mt-3 p-3 bg-gradient-to-br from-blue-50/50 to-slate-50 border border-slate-200 rounded-lg">
+          <div className="font-bold text-slate-700 mb-2 flex items-center gap-1">
+            <svg className="w-3.5 h-3.5 text-[#4A6FA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+            Outputs:
+          </div>
+          <div className="text-slate-600 space-y-1.5">
+            {Object.entries(outputs).map(([key, value], index) => {
+              const colors = ['#4A6FA5', '#5B8DBE', '#64748B', '#94A3B8'];
+              const color = colors[index % colors.length];
+              const label = outputLabels[key] || key;
+              return (
+                <div key={key} className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full`} style={{ backgroundColor: color }}></div>
+                  <span className="font-medium">{label}</span>
+                  <span className="text-slate-500">({typeof value})</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

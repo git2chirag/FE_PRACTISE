@@ -50,6 +50,8 @@ export const TextNode = ({ id, data }: any) => {
         title={<><i className="fas fa-font mr-2"></i>Text</>}
         handles={handles}
         className="min-w-64 min-h-48"
+        outputs={{ output: currText || '' }}
+        outputLabels={{ output: 'text' }}
       >
         <div className="flex flex-col gap-3">
           <RichTextEditor

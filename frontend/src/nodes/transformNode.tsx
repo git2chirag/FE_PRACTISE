@@ -32,7 +32,7 @@ export const TransformNode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title={<><i className="fas fa-cogs mr-2"></i>Transform</>} handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-cogs mr-2"></i>Transform</>} handles={handles} outputs={{ result: 'transformed result', original: 'original input', metadata: { operation, timestamp: new Date().toISOString() } }} outputLabels={{ result: 'result', original: 'original', metadata: 'metadata' }}>
       <div className="flex flex-col gap-3">
         <label className="flex flex-col text-xs">
           <span className="mb-1.5 font-semibold text-slate-600">Operation:</span>
@@ -49,31 +49,6 @@ export const TransformNode = ({ id, data }: any) => {
             <option value="replace"><i className="fas fa-exchange-alt mr-2"></i>Replace</option>
           </select>
         </label>
-        <div className="text-xs mt-1 p-3 bg-gradient-to-br from-blue-50/50 to-slate-50 border border-slate-200 rounded-lg">
-          <div className="font-bold text-slate-700 mb-2 flex items-center gap-1">
-            <svg className="w-3.5 h-3.5 text-[#4A6FA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-            Outputs:
-          </div>
-          <div className="text-slate-600 space-y-1.5">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-[#4A6FA5] rounded-full"></div>
-              <span className="font-medium">result</span>
-              <span className="text-slate-500">(any)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-[#5B8DBE] rounded-full"></div>
-              <span className="font-medium">original</span>
-              <span className="text-slate-500">(any)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-[#64748B] rounded-full"></div>
-              <span className="font-medium">metadata</span>
-              <span className="text-slate-500">(object)</span>
-            </div>
-          </div>
-        </div>
       </div>
     </BaseNode>
   );
