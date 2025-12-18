@@ -120,24 +120,6 @@ code {
   stroke: var(--color-primary-dark);
 }
 
-/* Unified Node Styles - Professional Steel Blue Theme */
-.customInput, .llm, .customOutput, .text, .transform, 
-.filter, .combine, .api, .conditional {
-  background: linear-gradient(135deg, var(--color-bg-elevated) 0%, var(--color-bg-secondary) 100%) !important;
-  border: 1.5px solid var(--color-border) !important;
-  box-shadow: var(--shadow-md) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.customInput:hover, .llm:hover, .customOutput:hover, .text:hover, 
-.transform:hover, .filter:hover, .combine:hover, .api:hover, .conditional:hover {
-  box-shadow: var(--shadow-lg) !important;
-  border-color: var(--color-primary-light) !important;
-  transform: translateY(-1px);
-}
-
-
-
 /* Draft.js Editor Styles */
 .rich-text-editor .DraftEditor-root {
   min-height: 80px;

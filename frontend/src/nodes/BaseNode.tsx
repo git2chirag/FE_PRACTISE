@@ -59,10 +59,10 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
 
   return (
     <div 
-      className={`min-w-[240px] min-h-[100px] p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 shadow-md relative transition-all duration-300 ${
+      className={`min-w-[240px] min-h-[100px] p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 border border-slate-200 shadow-md transition-all duration-300 ease-out hover:shadow-lg hover:border-blue-300 hover:-translate-y-0.5 ${
         isHighlighted 
           ? 'ring-2 ring-[#4A6FA5] ring-opacity-50 shadow-xl scale-105 border-2 border-[#5B8DBE]' 
-          : 'border border-slate-200 hover:shadow-lg hover:border-slate-300'
+          : ''
       } ${className}`}
       style={style}
     >
