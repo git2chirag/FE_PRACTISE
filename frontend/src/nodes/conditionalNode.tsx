@@ -48,7 +48,7 @@ export const ConditionalNode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title="Conditional" handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-code-branch mr-2"></i>Conditional</>} handles={handles}>
       <div className="flex flex-col gap-2">
         <label className="flex flex-col text-xs">
           <span className="mb-1 font-medium">Type:</span>

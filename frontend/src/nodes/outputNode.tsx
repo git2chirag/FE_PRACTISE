@@ -32,7 +32,7 @@ export const OutputNode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title="Output" handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-sign-out-alt mr-2"></i>Output</>} handles={handles}>
       <div className="flex flex-col gap-3">
         <label className="flex flex-col text-xs">
           <span className="mb-1.5 font-semibold text-gray-700">Output Type:</span>
@@ -41,10 +41,10 @@ export const OutputNode = ({ id, data }: any) => {
             onChange={handleTypeChange}
             className="px-3 py-2 border-2 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white hover:border-gray-400"
           >
-            <option value="Text">📝 Text</option>
-            <option value="Image">🖼️ Image</option>
-            <option value="File">📁 File</option>
-            <option value="JSON">{ } JSON</option>
+            <option value="Text"><i className="fas fa-file-alt mr-2"></i>Text</option>
+            <option value="Image"><i className="fas fa-image mr-2"></i>Image</option>
+            <option value="File"><i className="fas fa-folder mr-2"></i>File</option>
+            <option value="JSON"><i className="fas fa-code mr-2"></i>JSON</option>
           </select>
         </label>
         <div className="text-xs mt-1 p-3 bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-md">

@@ -32,7 +32,7 @@ export const TransformNode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title="⚙️ Transform" handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-cogs mr-2"></i>Transform</>} handles={handles}>
       <div className="flex flex-col gap-3">
         <label className="flex flex-col text-xs">
           <span className="mb-1.5 font-semibold text-gray-700">Operation:</span>
@@ -41,12 +41,12 @@ export const TransformNode = ({ id, data }: any) => {
             onChange={(e) => setOperation(e.target.value)}
             className="px-3 py-2 border-2 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all bg-white hover:border-gray-400"
           >
-            <option value="uppercase">🔠 Uppercase</option>
-            <option value="lowercase">🔡 Lowercase</option>
-            <option value="reverse">🔄 Reverse</option>
-            <option value="trim">✂️ Trim</option>
-            <option value="split">✂️ Split</option>
-            <option value="replace">🔁 Replace</option>
+            <option value="uppercase"><i className="fas fa-font mr-2"></i>Uppercase</option>
+            <option value="lowercase"><i className="fas fa-font mr-2"></i>Lowercase</option>
+            <option value="reverse"><i className="fas fa-undo mr-2"></i>Reverse</option>
+            <option value="trim"><i className="fas fa-cut mr-2"></i>Trim</option>
+            <option value="split"><i className="fas fa-cut mr-2"></i>Split</option>
+            <option value="replace"><i className="fas fa-exchange-alt mr-2"></i>Replace</option>
           </select>
         </label>
         <div className="text-xs mt-1 p-3 bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-md">

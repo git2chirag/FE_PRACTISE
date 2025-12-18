@@ -274,41 +274,13 @@ export const SubmitButton = () => {
     };
 
     return (
-        <div style={{
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            padding: '16px',
-            backgroundColor: '#F7FAFC',
-            borderTop: '2px solid #E2E8F0'
-        }}>
+        <div className="flex items-center justify-center p-4 bg-gray-50 border-t-2 border-gray-200">
             <button 
                 type="button"
                 onClick={handleSubmit}
-                style={{
-                    padding: '12px 32px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                    backgroundColor: '#4299E1',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                    transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#3182CE';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 6px 8px rgba(0, 0, 0, 0.15)';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#4299E1';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                }}
+                className="px-8 py-3 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
             >
-                Submit Pipeline
+                <i className="fas fa-play mr-2"></i>Submit Pipeline
             </button>
         </div>
     );

@@ -170,7 +170,7 @@ export const VariableSelector: React.FC<VariableSelectorProps> = ({
         tabIndex={-1}
       >
         <div className="px-4 py-3 border-b-2 border-blue-200 text-sm font-bold text-gray-800 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-10">
-          🔗 Select Output Variable
+          <i className="fas fa-link mr-2"></i>Select Output Variable
         </div>
         <div className="max-h-[350px] overflow-y-auto">
           {outputOptions.length === 0 ? (

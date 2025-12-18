@@ -43,7 +43,7 @@ export const APINode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title="🌐 API Call" handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-globe mr-2"></i>API Call</>} handles={handles}>
       <div className="flex flex-col gap-3">
         <label className="flex flex-col text-xs">
           <span className="mb-1.5 font-semibold text-gray-700">Method:</span>

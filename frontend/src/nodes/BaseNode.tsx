@@ -16,7 +16,7 @@ export interface HandleConfig {
 export interface BaseNodeProps {
   id: string;
   data: any;
-  title: string;
+  title: string | React.ReactNode;
   handles?: HandleConfig[];
   children?: ReactNode;
   style?: React.CSSProperties;
@@ -89,7 +89,6 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
             type={handle.type}
             position={handle.position}
             id={handle.id}
-            style={handle.style}
             className={`w-3 h-3 ${
               handle.type === 'source' 
                 ? 'bg-blue-500 hover:bg-blue-600' 
@@ -98,15 +97,13 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
           />
           {handle.label && (
             <div
-              className="absolute text-xs font-medium text-gray-600"
-              style={{
-                ...(handle.position === Position.Left
-                  ? { left: '-60px' }
+              className={`absolute text-xs font-medium text-gray-600 ${
+                handle.position === Position.Left
+                  ? '-left-15'
                   : handle.position === Position.Right
-                  ? { right: '-60px' }
-                  : {}),
-                ...handle.style
-              }}
+                  ? '-right-15'
+                  : ''
+              }`}
             >
               {handle.label}
             </div>

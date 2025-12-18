@@ -41,7 +41,7 @@ export const FilterNode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title="Filter" handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-filter mr-2"></i>Filter</>} handles={handles}>
       <div className="flex flex-col gap-2">
         <label className="flex flex-col text-xs">
           <span className="mb-1 font-medium">Condition:</span>

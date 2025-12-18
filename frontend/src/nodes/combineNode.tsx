@@ -45,7 +45,7 @@ export const CombineNode = ({ id, data }: any) => {
   ];
 
   return (
-    <BaseNode id={id} data={data} title="🔗 Combine" handles={handles}>
+    <BaseNode id={id} data={data} title={<><i className="fas fa-link mr-2"></i>Combine</>} handles={handles}>
       <div className="flex flex-col gap-3">
         <label className="flex flex-col text-xs">
           <span className="mb-1.5 font-semibold text-gray-700">Operation:</span>
@@ -54,10 +54,10 @@ export const CombineNode = ({ id, data }: any) => {
             onChange={(e) => setOperation(e.target.value)}
             className="px-3 py-2 border-2 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all bg-white hover:border-gray-400"
           >
-            <option value="concat">📝 Concatenate</option>
-            <option value="merge">🔄 Merge Objects</option>
-            <option value="array">📚 Create Array</option>
-            <option value="join">🔗 Join with Delimiter</option>
+            <option value="concat"><i className="fas fa-plus mr-2"></i>Concatenate</option>
+            <option value="merge"><i className="fas fa-object-group mr-2"></i>Merge Objects</option>
+            <option value="array"><i className="fas fa-list mr-2"></i>Create Array</option>
+            <option value="join"><i className="fas fa-link mr-2"></i>Join with Delimiter</option>
           </select>
         </label>
         <div className="text-xs mt-1 p-3 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-200 rounded-md">

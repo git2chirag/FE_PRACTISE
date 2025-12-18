@@ -36,7 +36,7 @@ export const LLMNode = ({ id, data }: { id: string, data: any }) => {
       type: 'target' as const,
       position: Position.Left,
       id: `${id}-var-${varName}-${index}`,
-      style: { top: `${(index + 1) * (100 / (variables.length + 1))}%` }
+      className: `top-[${(index + 1) * (100 / (variables.length + 1))}%]`
     })),
     // Always show 1 handle on the left if no variables
     ...(variables.length === 0 ? [
@@ -44,7 +44,6 @@ export const LLMNode = ({ id, data }: { id: string, data: any }) => {
         type: 'target' as const,
         position: Position.Left,
         id: `${id}-input`,
-        style: { top: '50%' }
       }
     ] : []),
     // Always show 1 handle on the right
@@ -52,13 +51,12 @@ export const LLMNode = ({ id, data }: { id: string, data: any }) => {
       type: 'source',
       position: Position.Right,
       id: `${id}-output`,
-      style: { top: '50%' }
     }
   ];
 
   return (
     <>
-      <BaseNode id={id} data={data} title="🤖 LLM" handles={handles}>
+      <BaseNode id={id} data={data} title={<><i className="fas fa-robot mr-2"></i>LLM</>} handles={handles}>
         <div className="flex flex-col gap-3">
           <label className="flex flex-col text-xs">
             <span className="mb-1.5 font-semibold text-gray-700">Model:</span>
@@ -67,9 +65,9 @@ export const LLMNode = ({ id, data }: { id: string, data: any }) => {
               onChange={(e) => setModel(e.target.value)}
               className="px-3 py-2 border-2 border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white hover:border-gray-400"
             >
-              <option value="gpt-4">🧠 GPT-4</option>
-              <option value="gpt-3.5-turbo">⚡ GPT-3.5 Turbo</option>
-              <option value="claude-3">🎭 Claude 3</option>
+              <option value="gpt-4"><i className="fas fa-brain mr-2"></i>GPT-4</option>
+              <option value="gpt-3.5-turbo"><i className="fas fa-bolt mr-2"></i>GPT-3.5 Turbo</option>
+              <option value="claude-3"><i className="fas fa-theater-masks mr-2"></i>Claude 3</option>
             </select>
           </label>
           <label className="flex flex-col text-xs">

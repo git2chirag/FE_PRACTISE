@@ -24,7 +24,7 @@ export const TextNode = ({ id, data }: any) => {
       type: 'target' as const,
       position: Position.Left,
       id: `${id}-var-${varName}-${index}`,
-      style: { top: `${(index + 1) * (100 / (variables.length + 1))}%` }
+      className: `top-[${(index + 1) * (100 / (variables.length + 1))}%]`
     })),
     // Always show 1 handle on the left if no variables
     ...(variables.length === 0 ? [
@@ -32,7 +32,6 @@ export const TextNode = ({ id, data }: any) => {
         type: 'target' as const,
         position: Position.Left,
         id: `${id}-input`,
-        style: { top: '50%' }
       }
     ] : []),
     // Always show 1 handle on the right
@@ -40,7 +39,6 @@ export const TextNode = ({ id, data }: any) => {
       type: 'source',
       position: Position.Right,
       id: `${id}-output`,
-      style: { top: '50%' }
     }
   ];
 
@@ -49,9 +47,9 @@ export const TextNode = ({ id, data }: any) => {
       <BaseNode
         id={id}
         data={data}
-        title="Text"
+        title={<><i className="fas fa-font mr-2"></i>Text</>}
         handles={handles}
-        style={{ minWidth: Math.max(250, currText.length * 2), minHeight: 200 }}
+        className="min-w-64 min-h-48"
       >
         <div className="flex flex-col gap-3">
           <RichTextEditor
