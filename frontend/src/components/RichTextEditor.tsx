@@ -47,7 +47,7 @@ const VariablePillComponent = (props: any) => {
     >
       <span>{variableName}</span>
       <span
-        className="ml-0.5 opacity-70 group-hover:opacity-100 hover:bg-white hover:bg-opacity-20 rounded-full w-4 h-4 flex items-center justify-center text-xs leading-none font-bold cursor-pointer transition-opacity"
+        className="ml-0.5 opacity-70 group-hover:opacity-100 hover:bg-opacity-20 rounded-full w-4 h-4 flex items-center justify-center text-xs leading-none font-bold cursor-pointer transition-opacity"
         data-pill-remove="true"
         style={{ userSelect: 'none' }}
         onClick={(e) => {
