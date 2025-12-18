@@ -5,7 +5,7 @@ import { SubmitButton } from './submit';
 
 function App() {
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
       <PipelineToolbar />
       <div className="flex-1 relative">
         <PipelineUI />

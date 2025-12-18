@@ -51,11 +51,11 @@ export const ConditionalNode = ({ id, data }: any) => {
     <BaseNode id={id} data={data} title={<><i className="fas fa-code-branch mr-2"></i>Conditional</>} handles={handles}>
       <div className="flex flex-col gap-2">
         <label className="flex flex-col text-xs">
-          <span className="mb-1 font-medium">Type:</span>
+          <span className="mb-1.5 font-semibold text-slate-600">Type:</span>
           <select 
             value={condition} 
             onChange={(e) => setCondition(e.target.value)}
-            className="px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4A6FA5]/30 focus:border-[#4A6FA5] transition-all bg-white hover:border-slate-300"
           >
             <option value="if">If/Else</option>
             <option value="switch">Switch</option>
@@ -63,11 +63,11 @@ export const ConditionalNode = ({ id, data }: any) => {
           </select>
         </label>
         <label className="flex flex-col text-xs">
-          <span className="mb-1 font-medium">Operator:</span>
+          <span className="mb-1.5 font-semibold text-slate-600">Operator:</span>
           <select 
             value={operator} 
             onChange={(e) => setOperator(e.target.value)}
-            className="px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4A6FA5]/30 focus:border-[#4A6FA5] transition-all bg-white hover:border-slate-300"
           >
             <option value="==">Equals (==)</option>
             <option value="!=">Not Equals (!=)</option>
@@ -77,12 +77,29 @@ export const ConditionalNode = ({ id, data }: any) => {
             <option value="<=">Less or Equal (&lt;=)</option>
           </select>
         </label>
-        <div className="text-xs text-gray-600 mt-1 p-2 bg-red-50 rounded">
-          <span className="font-medium">Outputs:</span>
-          <div className="text-gray-700 mt-1 space-y-0.5">
-            <div>• true_branch: any</div>
-            <div>• false_branch: any</div>
-            <div>• metadata: object</div>
+        <div className="text-xs mt-2 p-3 bg-gradient-to-br from-blue-50/50 to-slate-50 border border-slate-200 rounded-lg">
+          <div className="font-bold text-slate-700 mb-2 flex items-center gap-1">
+            <svg className="w-3.5 h-3.5 text-[#4A6FA5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+            </svg>
+            Outputs:
+          </div>
+          <div className="text-slate-600 space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#4A6FA5] rounded-full"></div>
+              <span className="font-medium">true_branch</span>
+              <span className="text-slate-500">(any)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#5B8DBE] rounded-full"></div>
+              <span className="font-medium">false_branch</span>
+              <span className="text-slate-500">(any)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#64748B] rounded-full"></div>
+              <span className="font-medium">metadata</span>
+              <span className="text-slate-500">(object)</span>
+            </div>
           </div>
         </div>
       </div>

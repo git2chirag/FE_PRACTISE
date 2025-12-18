@@ -54,20 +54,20 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
 
   return (
     <div 
-      className={`min-w-[240px] min-h-[100px] p-4 rounded-xl bg-white shadow-lg relative transition-all duration-200 ${
+      className={`min-w-[240px] min-h-[100px] p-4 rounded-xl bg-gradient-to-br from-white to-slate-50 shadow-md relative transition-all duration-300 ${
         isHighlighted 
-          ? 'ring-4 ring-blue-400 ring-opacity-60 shadow-xl scale-105 border-2 border-blue-300' 
-          : 'border-2 border-gray-200 hover:shadow-xl hover:border-gray-300'
+          ? 'ring-2 ring-[#4A6FA5] ring-opacity-50 shadow-xl scale-105 border-2 border-[#5B8DBE]' 
+          : 'border border-slate-200 hover:shadow-lg hover:border-slate-300'
       } ${className}`}
       style={style}
     >
       {/* Delete Button */}
       <button
         onClick={handleDelete}
-        className={`absolute top-3 right-3 w-6 h-6 rounded-full border-none flex items-center justify-center text-base font-bold transition-all z-10 ${
+        className={`absolute top-2 right-2 w-7 h-7 rounded-lg border-none flex items-center justify-center text-lg font-bold transition-all duration-200 z-10 ${
           confirmDelete 
-            ? 'bg-red-500 text-white hover:bg-red-600 scale-110' 
-            : 'bg-gray-100 text-gray-500 hover:bg-red-100 hover:text-red-600'
+            ? 'bg-red-500 text-white hover:bg-red-600 scale-110 shadow-md' 
+            : 'bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-500 hover:shadow-sm'
         }`}
         title={confirmDelete ? 'Click again to confirm delete' : 'Delete node'}
       >
@@ -76,9 +76,9 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
       
       {/* Confirmation Tooltip */}
       {confirmDelete && (
-        <div className="absolute -top-10 right-3 bg-red-600 text-white px-3 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap z-20 shadow-lg">
+        <div className="absolute -top-12 right-2 bg-red-500 text-white px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap z-20 shadow-xl animate-pulse">
           Click again to confirm
-          <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-red-600"></div>
+          <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-red-500"></div>
         </div>
       )}
 
@@ -91,9 +91,10 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
             id={handle.id}
             className={`w-3 h-3 ${
               handle.type === 'source' 
-                ? 'bg-blue-500 hover:bg-blue-600' 
-                : 'bg-green-500 hover:bg-green-600'
-            } border-2 border-white transition-all`}
+                ? 'bg-[#4A6FA5] hover:bg-[#3B5A8C]' 
+                : 'bg-[#5B8DBE] hover:bg-[#6B8EC7]'
+            } border-2 border-white shadow-sm transition-all hover:scale-125`}
+            style={handle.style}
           />
           {handle.label && (
             <div
@@ -112,19 +113,19 @@ export const BaseNode: React.FC<BaseNodeProps> = ({
       ))}
       
       {/* Title */}
-      <div className="text-base font-bold text-gray-800 mb-3 border-b-2 border-gray-200 pb-2 pr-8 bg-gradient-to-r from-gray-50 to-transparent -mx-4 px-4 -mt-4 pt-4 rounded-t-xl">
+      <div className="text-base font-bold text-slate-700 mb-3 border-b border-slate-200 pb-2 pr-8 bg-gradient-to-r from-slate-50 via-blue-50/30 to-transparent -mx-4 px-4 -mt-4 pt-4 rounded-t-xl flex items-center gap-2">
         {title}
       </div>
       
       {/* Name field */}
       <div className="mb-3">
         <label className="flex flex-col text-xs">
-          <span className="mb-1.5 font-semibold text-gray-700">Node Name:</span>
+          <span className="mb-1.5 font-semibold text-slate-600">Node Name:</span>
           <input
             type="text"
             value={data?.name || id}
             onChange={handleNameChange}
-            className="px-3 py-2 border-2 border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all hover:border-gray-400"
+            className="px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#4A6FA5]/30 focus:border-[#4A6FA5] transition-all hover:border-slate-300"
             placeholder="Enter node name"
           />
         </label>
