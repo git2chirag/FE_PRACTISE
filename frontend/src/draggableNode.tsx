@@ -2,7 +2,7 @@
 
 import { DragEvent } from "react";
 
-export const DraggableNode = ({ type, label }: { type: string; label: string }) => {
+export const DraggableNode = ({ type, label, icon }: { type: string; label: string; icon?: React.ReactNode }) => {
     const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
       const appData = { nodeType };
       event.dataTransfer.setData('application/reactflow', JSON.stringify(appData));
@@ -15,9 +15,7 @@ export const DraggableNode = ({ type, label }: { type: string; label: string }) 
         onDragStart={(event) => onDragStart(event, type)}
         draggable
       >
-          <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
+          {icon && <span className="text-white text-sm">{icon}</span>}
           <span className="text-white text-sm font-semibold">{label}</span>
       </div>
     );

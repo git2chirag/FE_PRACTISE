@@ -37,15 +37,15 @@ export const PipelineToolbar = () => {
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                    <DraggableNode type='customInput' label='Input' />
-                    <DraggableNode type='llm' label='LLM' />
-                    <DraggableNode type='customOutput' label='Output' />
-                    <DraggableNode type='text' label='Text' />
-                    <DraggableNode type='transform' label='Transform' />
-                    <DraggableNode type='filter' label='Filter' />
-                    <DraggableNode type='combine' label='Combine' />
-                    <DraggableNode type='api' label='API' />
-                    <DraggableNode type='conditional' label='Conditional' />
+                    <DraggableNode type='customInput' label='Input' icon={<i className="fa-solid fa-keyboard"></i>}/>
+                    <DraggableNode type='llm' label='LLM' icon={<i className="fa-solid fa-robot"></i>} />
+                    <DraggableNode type='customOutput' label='Output' icon={<i className="fa-solid fa-upload"></i>} />
+                    <DraggableNode type='text' label='Text' icon={<i className="fa-solid fa-file-alt"></i>} />
+                    <DraggableNode type='transform' label='Transform' icon={<i className="fa-solid fa-exchange-alt"></i>} />
+                    <DraggableNode type='filter' label='Filter' icon={<i className="fa-solid fa-filter"></i>} />
+                    <DraggableNode type='combine' label='Combine' icon={<i className="fa-solid fa-layer-group"></i>} />
+                    <DraggableNode type='api' label='API' icon={<i className="fa-solid fa-cloud"></i>} />
+                    <DraggableNode type='conditional' label='Conditional' icon={<i className="fa-solid fa-code-branch"></i>} />
                 </div>
             </div>
         </div>
