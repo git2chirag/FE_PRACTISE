@@ -271,6 +271,11 @@ export const SubmitButton = () => {
 
             const data = await response.json();
             
+            if (data.num_nodes === 0) {
+                alert('Pipeline is invalid. Add Nodes and Edges to the canvas.');
+                return;
+            }
+            
             // Display a user-friendly alert
             alert(
                 `Pipeline Analysis:\n\n` +
@@ -307,6 +312,11 @@ export const SubmitButton = () => {
             }
 
             const data = await response.json();
+            
+            if (data.num_nodes === 0) {
+                alert('Pipeline is invalid. Add Nodes and Edges to the canvas.');
+                return;
+            }
             
             // Display a user-friendly alert
             alert(
