@@ -39,13 +39,30 @@ const VariablePillComponent = (props: any) => {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 ${bgColor} text-white rounded-full text-xs font-medium mx-0.5 align-middle`}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 ${bgColor} text-white rounded-full text-xs font-medium mx-0.5 align-middle relative group`}
       contentEditable={false}
       data-entity-type="variable"
       data-variable-name={variableName}
       style={{ userSelect: 'none', cursor: 'default' }}
     >
       <span>{variableName}</span>
+      <span
+        className="ml-0.5 opacity-70 group-hover:opacity-100 hover:bg-white hover:bg-opacity-20 rounded-full w-4 h-4 flex items-center justify-center text-xs leading-none font-bold cursor-pointer transition-opacity"
+        data-pill-remove="true"
+        style={{ userSelect: 'none' }}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          // Dispatch custom event that the editor can listen to
+          const event = new CustomEvent('pillRemove', {
+            detail: { variableName },
+            bubbles: true
+          });
+          e.currentTarget.dispatchEvent(event);
+        }}
+      >
+        ×
+      </span>
     </span>
   );
 };
@@ -355,7 +372,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }, 50);
   }, [editorState, triggerPosition, nodeId, insertVariablePill, setHighlightedNode, createVariableConnection]);
 
-  // Handle keyboard commands
+  // Handle keyboard commands - Pills are now immutable, can't be deleted by backspace
   const handleKeyCommand = useCallback((command: string, state: EditorState) => {
     if (command === 'backspace' || command === 'delete') {
       const selection = state.getSelection();
@@ -369,47 +386,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         if (entityKey) {
           const entity = contentState.getEntity(entityKey);
           if (entity.getType() === 'VARIABLE') {
-            // Find entity range
-            let entityStart = startOffset - 1;
-            while (entityStart > 0 && block.getEntityAt(entityStart - 1) === entityKey) {
-              entityStart--;
-            }
-            let entityEnd = startOffset;
-            while (entityEnd < block.getLength() && block.getEntityAt(entityEnd) === entityKey) {
-              entityEnd++;
-            }
-            
-            const selectionToRemove = selection.merge({
-              anchorOffset: entityStart,
-              focusOffset: entityEnd,
-            }) as SelectionState;
-            
-            const newContentState = Modifier.removeRange(
-              contentState,
-              selectionToRemove,
-              'backward'
-            );
-            
-            const newEditorState = EditorState.push(
-              state,
-              newContentState,
-              'remove-range'
-            );
-            
-            setEditorState(newEditorState);
-            
-            // Remove connection
-            const { variableName: removedVarName } = entity.getData();
-            console.log('[RichTextEditor] Backspace removing variable:', removedVarName);
-            removeVariableConnection(nodeId, removedVarName);
-            
+            // Pills are immutable - prevent deletion via backspace
             return 'handled' as const;
           }
         }
       }
     }
     return 'not-handled' as const;
-  }, [nodeId, removeVariableConnection]);
+  }, []);
 
   const handleSelectorClose = useCallback(() => {
     setShowVariableSelector(false);
@@ -425,78 +409,80 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }, 0);
   }, []);
 
-  // Handle removing a variable via clicking X button (detected through click on container)
-  const handleContainerMouseDown = useCallback((e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    // Check if clicking on X button inside pill
-    if (target.tagName === 'BUTTON' && target.closest('[data-entity-type="variable"]')) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const pill = target.closest('[data-entity-type="variable"]') as HTMLElement;
-      const variableName = pill?.getAttribute('data-variable-name');
-      
-      if (variableName) {
-        // Remove this variable from editor
-        const contentState = editorState.getCurrentContent();
-        let newContentState = contentState;
+  // Handle removing a variable via clicking X button
+  const handlePillRemove = useCallback((e: CustomEvent) => {
+    const { variableName } = e.detail;
+    console.log('[RichTextEditor] Removing variable via custom event:', variableName);
 
-        contentState.getBlockMap().forEach((block) => {
-          if (block) {
-            const entitiesToRemove: Array<{ start: number; end: number }> = [];
+    // Remove this variable from editor
+    const contentState = editorState.getCurrentContent();
+    let newContentState = contentState;
 
-            block.findEntityRanges(
-              (character) => {
-                const entityKey = character.getEntity();
-                if (entityKey) {
-                  const entity = contentState.getEntity(entityKey);
-                  return (
-                    entity.getType() === 'VARIABLE' &&
-                    entity.getData().variableName === variableName
-                  );
-                }
-                return false;
-              },
-              (start, end) => {
-                entitiesToRemove.push({ start, end });
-              }
-            );
+    contentState.getBlockMap().forEach((block) => {
+      if (block) {
+        const entitiesToRemove: Array<{ start: number; end: number }> = [];
 
-            entitiesToRemove.reverse().forEach(({ start, end }) => {
-              const blockKey = block.getKey();
-              const sel = SelectionState.createEmpty(blockKey).merge({
-                anchorOffset: start,
-                focusOffset: end,
-              }) as SelectionState;
-
-              newContentState = Modifier.removeRange(
-                newContentState,
-                sel,
-                'backward'
+        block.findEntityRanges(
+          (character) => {
+            const entityKey = character.getEntity();
+            if (entityKey) {
+              const entity = contentState.getEntity(entityKey);
+              return (
+                entity.getType() === 'VARIABLE' &&
+                entity.getData().variableName === variableName
               );
-            });
+            }
+            return false;
+          },
+          (start, end) => {
+            entitiesToRemove.push({ start, end });
           }
-        });
-
-        const newEditorState = EditorState.push(
-          editorState,
-          newContentState,
-          'remove-range'
         );
 
-        setEditorState(newEditorState);
+        entitiesToRemove.reverse().forEach(({ start, end }) => {
+          const blockKey = block.getKey();
+          const sel = SelectionState.createEmpty(blockKey).merge({
+            anchorOffset: start,
+            focusOffset: end,
+          }) as SelectionState;
 
-        // Notify parent
-        const plainText = newContentState.getPlainText();
-        const variables = extractVariables(newContentState);
-        onChange(plainText, variables);
-        
-        // Remove connection
-        console.log('[RichTextEditor] Removing variable connection:', { nodeId, variableName });
-        removeVariableConnection(nodeId, variableName);
+          newContentState = Modifier.removeRange(
+            newContentState,
+            sel,
+            'backward'
+          );
+        });
       }
-    }
+    });
+
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      'remove-range'
+    );
+
+    setEditorState(newEditorState);
+
+    // Notify parent
+    const plainText = newContentState.getPlainText();
+    const variables = extractVariables(newContentState);
+    onChange(plainText, variables);
+
+    // Remove connection
+    console.log('[RichTextEditor] Removing variable connection:', { nodeId, variableName });
+    removeVariableConnection(nodeId, variableName);
   }, [editorState, extractVariables, onChange, nodeId, removeVariableConnection]);
+
+  // Set up event listener for pill removal
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('pillRemove', handlePillRemove as EventListener);
+      return () => {
+        container.removeEventListener('pillRemove', handlePillRemove as EventListener);
+      };
+    }
+  }, [handlePillRemove]);
 
   return (
     <>
@@ -504,7 +490,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         ref={containerRef}
         className={`rich-text-editor border-2 border-gray-300 rounded-md px-3 py-2 min-h-[80px] focus-within:ring-2 focus-within:ring-${pillColor}-500 focus-within:border-${pillColor}-500 transition-all bg-white hover:border-gray-400 ${className}`}
         onClick={handleContainerClick}
-        onMouseDown={handleContainerMouseDown}
       >
         <Editor
           ref={editorRef}

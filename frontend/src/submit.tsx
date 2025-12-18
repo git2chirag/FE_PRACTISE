@@ -3,12 +3,29 @@ import React from 'react';
 import { useStore } from './store';
 import type { Node, Edge } from 'reactflow';
 
+// Helper function to get input values for a node
+const getNodeInputs = (nodeId: string, edges: Edge[], nodeOutputs: Record<string, any>): any[] => {
+    const inputs: any[] = [];
+    edges.forEach(edge => {
+        if (edge.target === nodeId) {
+            const sourceNode = edge.source;
+            // Get all outputs from source node
+            Object.keys(nodeOutputs).forEach(key => {
+                if (key.startsWith(`${sourceNode}.`)) {
+                    inputs.push(nodeOutputs[key]);
+                }
+            });
+        }
+    });
+    return inputs;
+};
+
 // Function to resolve variable references to actual values
 const resolveVariables = (nodes: Node[], edges: Edge[]): Node[] => {
     // Create a map of node outputs
     const nodeOutputs: Record<string, any> = {};
     
-    // First pass: collect all node outputs
+    // First pass: collect all node outputs and process them
     nodes.forEach(node => {
         const nodeData = node.data;
         
@@ -22,6 +39,141 @@ const resolveVariables = (nodes: Node[], edges: Edge[]): Node[] => {
             nodeOutputs[`${node.id}.response`] = `[LLM Response from ${nodeData.model || 'GPT-4'}]`;
             nodeOutputs[`${node.id}.usage`] = '[Token Usage]';
             nodeOutputs[`${node.id}.model_name`] = nodeData.model || 'gpt-4';
+        }
+        // For transform nodes - apply the operation dynamically
+        else if (node.type === 'transform') {
+            const inputs = getNodeInputs(node.id, edges, nodeOutputs);
+            const inputValue = inputs[0] || 'sample_input';
+            const operation = nodeData.operation || 'uppercase';
+            
+            let result = inputValue;
+            switch (operation) {
+                case 'uppercase':
+                    result = String(inputValue).toUpperCase();
+                    break;
+                case 'lowercase':
+                    result = String(inputValue).toLowerCase();
+                    break;
+                case 'reverse':
+                    result = String(inputValue).split('').reverse().join('');
+                    break;
+                case 'trim':
+                    result = String(inputValue).trim();
+                    break;
+                case 'split':
+                    result = String(inputValue).split(' ');
+                    break;
+                case 'replace':
+                    result = String(inputValue).replace(/[0-9]/g, 'X');
+                    break;
+            }
+            
+            nodeOutputs[`${node.id}.result`] = result;
+            nodeOutputs[`${node.id}.original`] = inputValue;
+            nodeOutputs[`${node.id}.metadata`] = { operation, timestamp: new Date().toISOString() };
+        }
+        // For filter nodes - apply the condition dynamically
+        else if (node.type === 'filter') {
+            const inputs = getNodeInputs(node.id, edges, nodeOutputs);
+            const inputValue = inputs[0] || 'sample_input';
+            const condition = nodeData.condition || 'contains';
+            const filterValue = nodeData.value || '';
+            
+            let matches = false;
+            const strInput = String(inputValue);
+            
+            switch (condition) {
+                case 'contains':
+                    matches = strInput.includes(filterValue);
+                    break;
+                case 'equals':
+                    matches = strInput === filterValue;
+                    break;
+                case 'startsWith':
+                    matches = strInput.startsWith(filterValue);
+                    break;
+                case 'endsWith':
+                    matches = strInput.endsWith(filterValue);
+                    break;
+                case 'greaterThan':
+                    matches = parseFloat(strInput) > parseFloat(filterValue);
+                    break;
+                case 'lessThan':
+                    matches = parseFloat(strInput) < parseFloat(filterValue);
+                    break;
+            }
+            
+            nodeOutputs[`${node.id}.match`] = matches ? inputValue : null;
+            nodeOutputs[`${node.id}.no_match`] = !matches ? inputValue : null;
+            nodeOutputs[`${node.id}.metadata`] = { condition, filterValue, matches };
+        }
+        // For combine nodes - combine inputs dynamically
+        else if (node.type === 'combine') {
+            const inputs = getNodeInputs(node.id, edges, nodeOutputs);
+            const operation = nodeData.operation || 'concat';
+            
+            let combined;
+            switch (operation) {
+                case 'concat':
+                    combined = inputs.join('');
+                    break;
+                case 'merge':
+                    combined = Object.assign({}, ...inputs.filter(i => typeof i === 'object'));
+                    break;
+                case 'array':
+                    combined = inputs;
+                    break;
+                case 'join':
+                    combined = inputs.join(', ');
+                    break;
+            }
+            
+            nodeOutputs[`${node.id}.combined`] = combined;
+            nodeOutputs[`${node.id}.count`] = inputs.length;
+            nodeOutputs[`${node.id}.metadata`] = { operation, inputCount: inputs.length };
+        }
+        // For API nodes - simulate API call
+        else if (node.type === 'api') {
+            const method = nodeData.method || 'GET';
+            const url = nodeData.url || 'https://api.example.com';
+            
+            nodeOutputs[`${node.id}.response`] = { data: 'API response data', url, method };
+            nodeOutputs[`${node.id}.status`] = 200;
+            nodeOutputs[`${node.id}.headers`] = { 'content-type': 'application/json' };
+            nodeOutputs[`${node.id}.error`] = null;
+        }
+        // For conditional nodes - evaluate condition dynamically
+        else if (node.type === 'conditional') {
+            const inputs = getNodeInputs(node.id, edges, nodeOutputs);
+            const conditionValue = inputs[0] || null;
+            const compareValue = inputs[1] || null;
+            const operator = nodeData.operator || '==';
+            
+            let result = false;
+            switch (operator) {
+                case '==':
+                    result = conditionValue == compareValue;
+                    break;
+                case '!=':
+                    result = conditionValue != compareValue;
+                    break;
+                case '>':
+                    result = conditionValue > compareValue;
+                    break;
+                case '<':
+                    result = conditionValue < compareValue;
+                    break;
+                case '>=':
+                    result = conditionValue >= compareValue;
+                    break;
+                case '<=':
+                    result = conditionValue <= compareValue;
+                    break;
+            }
+            
+            nodeOutputs[`${node.id}.true_branch`] = result ? conditionValue : null;
+            nodeOutputs[`${node.id}.false_branch`] = !result ? conditionValue : null;
+            nodeOutputs[`${node.id}.metadata`] = { operator, result, conditionValue, compareValue };
         }
         // For other nodes with outputs
         else if (nodeData.outputs) {
