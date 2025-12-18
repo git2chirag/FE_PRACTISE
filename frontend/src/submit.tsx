@@ -231,6 +231,20 @@ const resolveVariables = (nodes: Node[], edges: Edge[]): Node[] => {
     });
 };
 
+// Function to build adjacency list from nodes and edges
+const buildAdjacencyList = (nodes: Node[], edges: Edge[]): Record<string, string[]> => {
+    const adjacencyList: Record<string, string[]> = {};
+    // Initialize all nodes with empty arrays
+    nodes.forEach(node => {
+        adjacencyList[node.id] = [];
+    });
+    // Add targets for each source
+    edges.forEach(edge => {
+        adjacencyList[edge.source].push(edge.target);
+    });
+    return adjacencyList;
+};
+
 export const SubmitButton = () => {
     const nodes = useStore((state) => state.nodes);
     const edges = useStore((state) => state.edges);
@@ -273,14 +287,58 @@ export const SubmitButton = () => {
         }
     };
 
+    const handleSubmitAdjacency = async () => {
+        try {
+            // Build adjacency list from nodes and edges
+            const adjacencyList = buildAdjacencyList(nodes, edges);
+            
+            console.log('[Submit] Adjacency list:', adjacencyList);
+            
+            const response = await fetch('http://127.0.0.1:8000/pipelines/parse-adjacency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ adjacency_list: adjacencyList }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            
+            // Display a user-friendly alert
+            alert(
+                `Pipeline Analysis (Adjacency List):\n\n` +
+                `Number of Nodes: ${data.num_nodes}\n` +
+                `Number of Edges: ${data.num_edges}\n` +
+                `Is DAG (Directed Acyclic Graph): ${data.is_dag ? 'Yes ✓' : 'No ✗'}\n\n` +
+                (data.is_dag 
+                    ? 'Your pipeline is valid!' 
+                    : 'Warning: Your pipeline contains cycles!')
+            );
+        } catch (error) {
+            console.error('Error submitting pipeline with adjacency list:', error);
+            alert('Error: Could not connect to backend. Make sure the backend server is running on port 8000.');
+        }
+    };
+
     return (
-        <div className="flex items-center justify-center p-4 bg-gray-50 border-t-2 border-gray-200">
+        <div className="flex items-center justify-center p-4 bg-gray-50 border-t-2 border-gray-200 space-x-4">
             <button 
                 type="button"
                 onClick={handleSubmit}
                 className="px-8 py-3 text-sm font-semibold text-white bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
             >
                 <i className="fas fa-play mr-2"></i>Submit Pipeline
+            </button>
+            <button 
+                type="button"
+                onClick={handleSubmitAdjacency}
+                className="px-8 py-3 text-sm font-semibold text-white bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+            >
+                <i className="fas fa-play mr-2"></i>Submit with Adjacency List
             </button>
         </div>
     );

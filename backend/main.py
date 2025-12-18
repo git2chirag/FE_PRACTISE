@@ -29,6 +29,9 @@ class Pipeline(BaseModel):
     nodes: List[Node]
     edges: List[Edge]
 
+class AdjacencyPipeline(BaseModel):
+    adjacency_list: Dict[str, List[str]]
+
 def is_dag(nodes: List[Node], edges: List[Edge]) -> bool:
     """
     Check if the graph formed by nodes and edges is a Directed Acyclic Graph (DAG).
@@ -69,6 +72,40 @@ def is_dag(nodes: List[Node], edges: List[Edge]) -> bool:
     
     return True
 
+def is_dag_from_adj(adjacency_list: Dict[str, List[str]]) -> bool:
+    """
+    Check if the graph formed by adjacency list is a Directed Acyclic Graph (DAG).
+    Uses DFS to detect cycles.
+    """
+    # Track visited nodes and nodes in current path
+    visited = set()
+    rec_stack = set()
+    
+    def has_cycle(node_id: str) -> bool:
+        """DFS helper to detect cycles"""
+        visited.add(node_id)
+        rec_stack.add(node_id)
+        
+        # Visit all neighbors
+        for neighbor in adjacency_list.get(node_id, []):
+            if neighbor not in visited:
+                if has_cycle(neighbor):
+                    return True
+            elif neighbor in rec_stack:
+                # Found a back edge (cycle)
+                return True
+        
+        rec_stack.remove(node_id)
+        return False
+    
+    # Check each node
+    for node_id in adjacency_list:
+        if node_id not in visited:
+            if has_cycle(node_id):
+                return False
+    
+    return True
+
 @app.get('/')
 def read_root():
     return {'Ping': 'Pong'}
@@ -85,6 +122,25 @@ def parse_pipeline(pipeline: Pipeline):
     num_nodes = len(pipeline.nodes)
     num_edges = len(pipeline.edges)
     is_dag_result = is_dag(pipeline.nodes, pipeline.edges)
+    
+    return {
+        'num_nodes': num_nodes,
+        'num_edges': num_edges,
+        'is_dag': is_dag_result
+    }
+
+@app.post('/pipelines/parse-adjacency')
+def parse_pipeline_adjacency(pipeline: AdjacencyPipeline):
+    """
+    Parse the pipeline using adjacency list and return analysis.
+    Returns:
+        - num_nodes: number of nodes in the pipeline
+        - num_edges: number of edges in the pipeline
+        - is_dag: whether the pipeline forms a directed acyclic graph
+    """
+    num_nodes = len(pipeline.adjacency_list)
+    num_edges = sum(len(targets) for targets in pipeline.adjacency_list.values())
+    is_dag_result = is_dag_from_adj(pipeline.adjacency_list)
     
     return {
         'num_nodes': num_nodes,
