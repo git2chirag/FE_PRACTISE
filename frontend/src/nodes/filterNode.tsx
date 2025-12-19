@@ -30,14 +30,8 @@ export const FilterNode = ({ id, data }: any) => {
       type: 'source',
       position: Position.Right,
       id: `${id}-out-match`,
-      style: { top: '33%' }
+      style: { top: '50%' }
     },
-    {
-      type: 'source',
-      position: Position.Right,
-      id: `${id}-out-nomatch`,
-      style: { top: '66%' }
-    }
   ];
 
   return (
