@@ -1,7 +1,7 @@
 import React from 'react';
-import { PipelineToolbar } from './toolbar';
-import { PipelineUI } from './ui';
-import { SubmitButton } from './submit';
+import { PipelineToolbar } from './components/toolbar';
+import { PipelineUI } from './components/ui';
+import { SubmitButton } from './components/submit';
 
 function App() {
   return (

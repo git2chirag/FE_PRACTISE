@@ -5,16 +5,16 @@
 import React, { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import type { ReactFlowInstance, ConnectionLineType } from 'reactflow';
-import { useStore, type StoreState } from './store';
-import { InputNode } from './nodes/inputNode';
-import { LLMNode } from './nodes/llmNode';
-import { OutputNode } from './nodes/outputNode';
-import { TextNode } from './nodes/textNode';
-import { TransformNode } from './nodes/transformNode';
-import { FilterNode } from './nodes/filterNode';
-import { CombineNode } from './nodes/combineNode';
-import { APINode } from './nodes/apiNode';
-import { ConditionalNode } from './nodes/conditionalNode';
+import { useStore, type StoreState } from '../store';
+import { InputNode } from '../nodes/inputNode';
+import { LLMNode } from '../nodes/llmNode';
+import { OutputNode } from '../nodes/outputNode';
+import { TextNode } from '../nodes/textNode';
+import { TransformNode } from '../nodes/transformNode';
+import { FilterNode } from '../nodes/filterNode';
+import { CombineNode } from '../nodes/combineNode';
+import { APINode } from '../nodes/apiNode';
+import { ConditionalNode } from '../nodes/conditionalNode';
 
 import 'reactflow/dist/style.css';
 

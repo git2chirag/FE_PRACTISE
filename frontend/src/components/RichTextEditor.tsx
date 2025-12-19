@@ -12,7 +12,7 @@ import {
   ContentBlock,
 } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { VariableSelector } from '../VariableSelector';
+import { VariableSelector } from './VariableSelector';
 import { useStore } from '../store';
 
 interface RichTextEditorProps {

@@ -2,8 +2,7 @@
 // Component for selecting variables from available nodes
 
 import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import { StoreState, useStore } from './store';
+import { StoreState, useStore } from '../store';
 
 interface VariableSelectorProps {
   isOpen: boolean;

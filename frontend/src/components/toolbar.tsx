@@ -1,8 +1,8 @@
 // toolbar.tsx
 
 import React from 'react';
-import DraggableNode  from './components/draggableNode';
-import { useStore } from './store';
+import DraggableNode  from './draggableNode';
+import { useStore } from '../store';
 
 export const PipelineToolbar = () => {
     const { showOutputs, toggleOutputs } = useStore();
