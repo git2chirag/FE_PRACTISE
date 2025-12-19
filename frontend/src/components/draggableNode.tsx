@@ -2,7 +2,7 @@
 
 import { DragEvent } from "react";
 
-export const DraggableNode = ({ type, label, icon }: { type: string; label: string; icon?: React.ReactNode }) => {
+const DraggableNode = ({ type, label, icon }: { type: string; label: string; icon?: React.ReactNode }) => {
     const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
       const appData = { nodeType };
       event.dataTransfer.setData('application/reactflow', JSON.stringify(appData));
@@ -21,3 +21,4 @@ export const DraggableNode = ({ type, label, icon }: { type: string; label: stri
     );
   };
   
+  export default DraggableNode;

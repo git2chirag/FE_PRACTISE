@@ -78,7 +78,7 @@ export const LLMNode = ({ id, data }: { id: string, data: any }) => {
               onChange={handlePromptChange}
               placeholder="You are a helpful assistant. Use {{variable}} to insert values..."
               className="text-sm min-h-[80px] font-mono"
-              pillColor="purple"
+              pillColor="#4A6FA5"
             />
           </label>
         <div className="grid grid-cols-2 gap-3">
